@@ -24,7 +24,20 @@ def get_stock_list():
     print("正在获取股票列表...")
     
     # 获取A股列表
-    stock_info = ak.stock_info_a_code_name()
+        stock_info = None
+    for i in range(3):
+        try:
+            stock_info = ak.stock_info_a_code_name()
+            break
+        except Exception as e:
+            print(f"  第{i+1}次获取股票列表失败：{e}")
+            if i < 2:
+                print("  2秒后重试...")
+                time.sleep(2)
+    
+    if stock_info is None:
+        print("获取股票列表失败，使用默认股票列表")
+        return []
     
     # 筛选主板股票（6开头沪市主板，0开头深市主板）
     # 排除3开头创业板，688科创板，4开头北交所
